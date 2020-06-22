@@ -1,14 +1,12 @@
-<?
+<?php
 
 require_once('function.php');
-require_once('config.php');
 
 session_start();
-
-if($_SESSION['Active'] == false){ 
-    header("location: login.php");
-	  exit;
-  }
+if(!user_logged_in()){
+    header('location: login.php');
+    die();
+}
 
 
 

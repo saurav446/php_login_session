@@ -1,9 +1,10 @@
 <?php
 
 
-require_once('function.php');
 session_start();
-	
+
+	require_once('function.php');
+
 	if(user_logged_in()){
 		header('location: profile.php');
 		die();
@@ -12,15 +13,27 @@ session_start();
       if(isset($_POST['register'])){
 		  $uname = $_POST['uname'];
 		  $email = $_POST['email'];
-		  $password = $_POST['password'];
 		  $cpassword = $_POST['cpassword'];
+		  $password = $_POST['password'];
 		   
 			$error = array();
+		
 
-			if($password == null){
-				$error['[password'] = "blank";
+			if(uname_ex()){
+				$error['uname'] = "Usename already exists";
 			}
-   
+			if (strlen($password) <= 8 ) {
+				$error['password'] = 'Password must be 8 character';
+			}
+			if (isset($_POST['password']) && $_POST['password'] !== $_POST['cpassword']) {
+				$error['cpassword'] = 'The two passwords do not match';
+			}
+			if (email_exists()){
+				$error['email'] = "This email already have an account! Places <a href='login.php'>Login Now!</a>";
+				 }
+
+
+			 
 			if(count($error) == 0 ){
 				$query = mysqli_query($connection,"INSERT INTO signup  (uname,email,password,cpassword) VALUES('$uname','$email','$password','$cpassword')");
 				  $success =  "You have been Registered! Places <a href='login.php'>Login Now!</a>";
@@ -38,8 +51,7 @@ session_start();
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<link href="style.css" rel="stylesheet" type="text/css" media="all" />
-
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 	<!-- main -->
@@ -49,13 +61,14 @@ session_start();
 			<div class="agileits-top">
 				<form action="#" method="POST">
 					<input class="text" type="text" name="uname" placeholder="Username" required="">
-                     <?php if(isset($error['uname'])){ echo $error; } ?>
+					<div class="loing" style="color:#FFFFFF; font-size:15px;"> <?php if(isset($error['uname'])){ echo $error['uname']; } ?></div>
 
 					<input class="text email" type="email" name="email" placeholder="Email" required="">
+					
 					<input class="text" type="password" name="password" placeholder="Password" required="">
 
-					<?php if(isset($error['password'])){ echo $error; } ?>
-
+					<div class="loing" style="color:#FFFFFF; font-size:15px;"> <?php if(isset($error['password'])){ echo $error['password']; } ?></div>
+					<div class="loing" style="color:#FFFFFF; font-size:15px;"> <?php if(isset($error['cpassword'])){ echo $error['cpassword']; } ?></div>
 					<input class="text w3lpass" type="password" name="cpassword" placeholder="Confirm Password" required="">
 					<div class="wthree-text">
 						<label class="anim">
@@ -65,11 +78,13 @@ session_start();
 						<div class="clear"> </div>
 					</div>
 					<input type="submit" name="register" value="SIGNUP">
+					
+					<div class="loing" style="color:#FFFFFF; text-align:center; font-size:20px;"> <?php if(isset($error['email'])){ echo $error['email']; } ?></div>
 				</form>
 
 				
                      <div class="loing" style="color:#FFFFFF; text-align:center; font-size:20px;"><?php if(isset($success)){ echo $success; }  ?></div>
-                   
+					 <a href='login.php'>Login Now!</a>
 			</div>
 		</div>
 		<!-- copyright -->
