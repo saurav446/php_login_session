@@ -14,7 +14,7 @@ session_start();
 		  $uname = $_POST['uname'];
 		  $email = $_POST['email'];
 		  $cpassword = $_POST['cpassword'];
-		  $password = $_POST['password'];
+		  $password = md5($_POST['password']);
 		   
 			$error = array();
 		
